@@ -14,3 +14,7 @@ rundev:
 
 migrations:
 	python manage.py makemigrations
+	python manage.py migrate
+
+tests:
+	python manage.py test
