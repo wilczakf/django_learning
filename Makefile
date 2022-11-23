@@ -18,3 +18,6 @@ migrations:
 
 tests:
 	python manage.py test
+
+shell:
+	python manage.py shell

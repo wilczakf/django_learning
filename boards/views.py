@@ -7,6 +7,6 @@ def home(request):
     return render(request, "home.html", {"boards": boards})
 
 
-def board_topics(request, board_id):
-    board = get_object_or_404(Board, pk=board_id)
+def board_topics(request, board_pk):
+    board = get_object_or_404(Board, pk=board_pk)
     return render(request, "topics.html", {"board": board})

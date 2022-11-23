@@ -19,7 +19,7 @@ from boards import views
 
 urlpatterns = [
     path("", views.home, name="home"),
-    re_path(r"^boards/(?P<board_id>\d+)/$", views.board_topics, name="board_topics"),
+    re_path(r"^boards/(?P<board_pk>\d+)/$", views.board_topics, name="board_topics"),
     path("admin/", admin.site.urls),
 ]
 

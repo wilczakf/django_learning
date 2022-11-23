@@ -2,8 +2,6 @@ import django.db.models.base
 from django.db import models
 from django.contrib.auth.models import User
 
-import boards.models
-
 DELETED_USER = "non_existing_user"
 
 
