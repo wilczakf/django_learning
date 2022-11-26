@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{%  load widget_tweaks %}
 
 {% block title %}New Topic{% endblock %}
 
@@ -11,14 +12,17 @@
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        <div class="form-group">
-            <label for="id_subject">Subject</label>
-            <input type="text" class="form-control" id="id_subject" name="subject">
-        </div>
-        <div class="form-group">
-            <label for="id_message">Your bait or other nonsense...</label>
-            <textarea class="form-control" id="id_message" name="message" rows="5">...Make it meaningful...</textarea>
-        </div>
+        {%  for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {% render_field field class="form-control" %}
+                {% if field.help_text %}
+                    <small class="form-text text-muted">
+                        {{ field.help_text }}
+                    </small>
+                {% endif %}
+            </div>
+        {% endfor %}
         <button type="submit" class="btn btn-success">Throw it!</button>
     </form>
 {% endblock %}
