@@ -3,6 +3,7 @@ from django.urls import reverse, resolve
 from django.contrib.auth.models import User
 from boards.views import home, board_topics, new_topic
 from boards.models import Board, Topic, Post
+from boards.forms import NewTopicForm
 
 
 class HomeTests(TestCase):
@@ -89,6 +90,12 @@ class NewTopicTests(TestCase):
         response = self.client.get(url)
         self.assertContains(response, "csrfmiddlewaretoken")
 
+    def test__contains_form(self):
+        url = reverse("new_topic", kwargs={"board_pk": 1})
+        response = self.client.get(url)
+        form = response.context.get("form")
+        self.assertIsInstance(form, NewTopicForm)
+
     def test__new_topic_valid_post_data(self):
         url = reverse("new_topic", kwargs={"board_pk": 1})
         data = {"subject": "Shitstorm", "message": "You suck."}
@@ -105,8 +112,9 @@ class NewTopicTests(TestCase):
 
         url = reverse("new_topic", kwargs={"board_pk": 1})
         response = self.client.post(url, {})
+        form = response.context.get("form")
         self.assertEqual(response.status_code, 200)
-
+        self.assertTrue(form.errors)
 
     def test__new_topic_invalid_post_data_empty_fields(self):
         """
