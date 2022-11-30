@@ -24,6 +24,16 @@ class SignUpTests(TestCase):
         form = self.response.context.get("form")
         self.assertIsInstance(form, SignUpForm)
 
+    def test__form_inputs(self):
+        """
+        The view must contain five inputs: `csrf`, `username`, `email`,
+        `password1`, `password2`.
+        """
+        self.assertContains(self.response, '<input', 5)
+        self.assertContains(self.response, 'type="text"', 1)
+        self.assertContains(self.response, 'type="email"', 1)
+        self.assertContains(self.response, 'type="password"', 2)
+
 
 class SuccessfulSignupTests(TestCase):
     def setUp(self) -> None:
@@ -59,7 +69,13 @@ class SuccessfulSignupTests(TestCase):
 class InvalidSignupTests(TestCase):
     def setUp(self) -> None:
         url = reverse("signup")
-        self.response = self.client.post(url, {})
+        data = {
+            "username": "",
+            "email": "",
+            "password1": "",
+            "password2": "",
+        }
+        self.response = self.client.post(url, data)
 
     def test__signup_status_code(self):
         """Invalid form submission should return the same page."""
@@ -68,7 +84,6 @@ class InvalidSignupTests(TestCase):
     def test__form_errors(self):
         form = self.response.context.get("form")
         self.assertTrue(form.errors)
-        # todo - crashes
 
     def test__dont_create_user(self):
         self.assertFalse(User.objects.exists())
