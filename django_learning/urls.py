@@ -8,6 +8,7 @@ from boards import views
 urlpatterns = [
     path("", views.home, name="home"),
     path("signup/", accounts_views.signup, name="signup"),
+    path("login/", auth_views.LoginView.as_view(template_name="login.html"), name="login"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     re_path(r"^boards/(?P<board_pk>\d+)/$", views.board_topics, name="board_topics"),
     re_path(r"^boards/(?P<board_pk>\d+)/new/$", views.new_topic, name="new_topic"),
