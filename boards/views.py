@@ -16,7 +16,7 @@ def board_topics(request, board_pk):
 
 def new_topic(request, board_pk):
     board = get_object_or_404(Board, pk=board_pk)
-    user = User.objects.first()  # todo get currently logged user
+    user = User.objects.first()
 
     if request.method == "POST":
         form = NewTopicForm(request.POST)
