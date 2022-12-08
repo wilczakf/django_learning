@@ -17,7 +17,7 @@ migrations:
 	python manage.py migrate
 
 tests:
-	python manage.py test
+	python manage.py test --parallel
 
 shell:
 	python manage.py shell
