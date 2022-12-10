@@ -6,7 +6,7 @@ from accounts import views as accounts_views
 from boards import views
 
 urlpatterns = [
-    path("", views.home, name="home"),
+    path("", views.BoardListView.as_view(), name="home"),
     path("signup/", accounts_views.signup, name="signup"),
     path(
         "login/", auth_views.LoginView.as_view(template_name="login.html"), name="login"
@@ -42,12 +42,37 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
-    path("settings/password/", auth_views.PasswordChangeView.as_view(template_name="password/password_change.html"), name="password_change"),
-    path("settings/password/done/", auth_views.PasswordChangeDoneView.as_view(template_name="password/password_change_done.html"), name="password_change_done"),
-    re_path(r"^boards/(?P<board_pk>\d+)/$", views.board_topics, name="board_topics"),
+    path(
+        "settings/password/",
+        auth_views.PasswordChangeView.as_view(
+            template_name="password/password_change.html"
+        ),
+        name="password_change",
+    ),
+    path(
+        "settings/password/done/",
+        auth_views.PasswordChangeDoneView.as_view(
+            template_name="password/password_change_done.html"
+        ),
+        name="password_change_done",
+    ),
+    path("boards/<board_pk>/", views.TopicListView.as_view(), name="board_topics"),
     re_path(r"^boards/(?P<board_pk>\d+)/new/$", views.new_topic, name="new_topic"),
-    re_path(r"^boards/(?P<board_pk>\d+)/topics/(?P<topic_pk>\d+)/$", views.topic_posts, name="topic_posts"),
-    re_path(r"^boards/(?P<board_pk>\d+)/topics/(?P<topic_pk>\d+)/reply/$", views.reply_topic, name="reply_topic"),
+    re_path(
+        r"^boards/(?P<board_pk>\d+)/topics/(?P<topic_pk>\d+)/$",
+        views.topic_posts,
+        name="topic_posts",
+    ),
+    re_path(
+        r"^boards/(?P<board_pk>\d+)/topics/(?P<topic_pk>\d+)/reply/$",
+        views.reply_topic,
+        name="reply_topic",
+    ),
+    path(
+        "boards/<board_pk>/topics/<topic_pk>/posts/<post_pk>/edit/",
+        views.PostUpdateView.as_view(),
+        name="edit_post",
+    ),
     path("admin/", admin.site.urls),
 ]
 
