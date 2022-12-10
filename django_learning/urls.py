@@ -58,9 +58,9 @@ urlpatterns = [
     ),
     path("boards/<board_pk>/", views.TopicListView.as_view(), name="board_topics"),
     re_path(r"^boards/(?P<board_pk>\d+)/new/$", views.new_topic, name="new_topic"),
-    re_path(
-        r"^boards/(?P<board_pk>\d+)/topics/(?P<topic_pk>\d+)/$",
-        views.topic_posts,
+    path(
+        "boards/<board_pk>/topics/<topic_pk>/",
+        views.PostListView.as_view(),
         name="topic_posts",
     ),
     re_path(

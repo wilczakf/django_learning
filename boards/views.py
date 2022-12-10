@@ -31,23 +31,28 @@ class TopicListView(ListView):
         return queryset
 
 
-def board_topics(request, board_pk):
-    board = get_object_or_404(Board, pk=board_pk)
-    queryset = board.topics.order_by("-last_updated").annotate(replies=Count("posts") - 1)
-    page = request.GET.get("page", 1)
-    paginator = Paginator(queryset, 10)
+class PostListView(ListView):
+    model = Post
+    context_object_name = "posts"
+    template_name = "topic_posts.html"
+    paginate_by = 3
 
-    try:
-        topics = paginator.page(page)
-    except PageNotAnInteger:
-        # redirect to the first page
-        topics = paginator.page(1)
-    except EmptyPage:
-        # redirect to the last page
-        topics = paginator.page(paginator.num_pages)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        self.topic.views += 1
+        self.topic.save()
+        kwargs["topic"] = self.topic
+        return super().get_context_data(**kwargs)
 
-    return render(request, "topics.html", {"board": board, "topics": topics})
+    def get_queryset(self):
+        self.topic = get_object_or_404(Topic, board__pk=self.kwargs.get("board_pk"), pk=self.kwargs.get("topic_pk"))
+        queryset = self.topic.posts.order_by("-created_at")
+        return queryset
 
+def topic_posts(request, board_pk, topic_pk):
+    topic = get_object_or_404(Topic, board__pk=board_pk, pk=topic_pk)
+    topic.views += 1
+    topic.save()
+    return render(request, "topic_posts.html", {"topic": topic})
 
 @login_required
 def new_topic(request, board_pk):
@@ -73,13 +78,6 @@ def new_topic(request, board_pk):
         form = NewTopicForm()
 
     return render(request, "new_topic.html", {"board": board, "form": form})
-
-
-def topic_posts(request, board_pk, topic_pk):
-    topic = get_object_or_404(Topic, board__pk=board_pk, pk=topic_pk)
-    topic.views += 1
-    topic.save()
-    return render(request, "topic_posts.html", {"topic": topic})
 
 
 @login_required
