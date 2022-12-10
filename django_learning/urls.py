@@ -57,14 +57,14 @@ urlpatterns = [
         name="password_change_done",
     ),
     path("boards/<board_pk>/", views.TopicListView.as_view(), name="board_topics"),
-    re_path(r"^boards/(?P<board_pk>\d+)/new/$", views.new_topic, name="new_topic"),
+    path("boards/<board_pk>/new/", views.new_topic, name="new_topic"),
     path(
         "boards/<board_pk>/topics/<topic_pk>/",
         views.PostListView.as_view(),
         name="topic_posts",
     ),
-    re_path(
-        r"^boards/(?P<board_pk>\d+)/topics/(?P<topic_pk>\d+)/reply/$",
+    path(
+        "boards/<board_pk>/topics/<topic_pk>/reply/",
         views.reply_topic,
         name="reply_topic",
     ),

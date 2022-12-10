@@ -27,7 +27,9 @@ class TopicListView(ListView):
 
     def get_queryset(self):
         self.board = get_object_or_404(Board, pk=self.kwargs.get("board_pk"))
-        queryset = self.board.topics.order_by("-last_updated").annotate(replies=Count("posts") - 1)
+        queryset = self.board.topics.order_by("-last_updated").annotate(
+            replies=Count("posts") - 1
+        )
         return queryset
 
 
@@ -44,15 +46,12 @@ class PostListView(ListView):
         return super().get_context_data(**kwargs)
 
     def get_queryset(self):
-        self.topic = get_object_or_404(Topic, board__pk=self.kwargs.get("board_pk"), pk=self.kwargs.get("topic_pk"))
+        self.topic = get_object_or_404(
+            Topic, board__pk=self.kwargs.get("board_pk"), pk=self.kwargs.get("topic_pk")
+        )
         queryset = self.topic.posts.order_by("-created_at")
         return queryset
 
-def topic_posts(request, board_pk, topic_pk):
-    topic = get_object_or_404(Topic, board__pk=board_pk, pk=topic_pk)
-    topic.views += 1
-    topic.save()
-    return render(request, "topic_posts.html", {"topic": topic})
 
 @login_required
 def new_topic(request, board_pk):
