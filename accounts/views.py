@@ -21,6 +21,7 @@ def signup(request):
 
     return render(request, "signup.html", {"form": form})
 
+
 @method_decorator(login_required, name="dispatch")
 class UserUpdateView(UpdateView):
     model = User
@@ -30,4 +31,3 @@ class UserUpdateView(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
-
