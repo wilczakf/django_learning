@@ -11,7 +11,9 @@ class UserAccountTestCase(TestCase):
         self.username = "test_user"
         self.email = "user@test.com"
         self.password = "test_password_123"
-        self.user = User.objects.create_user(username=self.username, email=self.email, password=self.password)
+        self.user = User.objects.create_user(
+            username=self.username, email=self.email, password=self.password
+        )
         self.url = reverse("account")
 
 
@@ -44,7 +46,7 @@ class UserAccountTests(UserAccountTestCase):
             email (email)
 
         """
-        self.assertContains(self.response, '<input', 4)
+        self.assertContains(self.response, "<input", 4)
         self.assertContains(self.response, 'type="text"', 2)
         self.assertContains(self.response, 'type="email"', 1)
 
@@ -64,7 +66,7 @@ class SuccessfulUpdateUserAccountTests(UserAccountTestCase):
         self.updated_user_data = {
             "first_name": "Filip",
             "last_name": "Walczak",
-            "email": "walczak@walczak.com"
+            "email": "walczak@walczak.com",
         }
         self.response = self.client.post(self.url, self.updated_user_data)
 
