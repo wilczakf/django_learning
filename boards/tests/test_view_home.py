@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse, resolve
-from boards.views import home
+from boards.views import BoardListView
 from boards.models import Board
 
 
@@ -17,7 +17,7 @@ class HomeTests(TestCase):
 
     def test__home_url_resolves_home_view(self):
         view = resolve("/")
-        self.assertEqual(view.func, home)
+        self.assertEqual(view.func.view_class, BoardListView)
 
     def test__home_view_contains_link_to_topics_page(self):
         board_topics_url = reverse("board_topics", kwargs={"board_pk": self.board.pk})

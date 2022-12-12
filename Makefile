@@ -1,5 +1,3 @@
-SETTINGS={{ django_learning}}.settings
-
 all:
 	@echo Hello %USERNAME%, nothing to do by default.
 
@@ -17,7 +15,7 @@ migrations:
 	python manage.py migrate
 
 tests:
-	python manage.py test --parallel
+	python manage.py test --verbosity 0 --parallel
 
 shell:
 	python manage.py shell
