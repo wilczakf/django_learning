@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.humanize",
+    "markdown",
     "widget_tweaks",
     "accounts",
     "boards",
@@ -135,3 +137,8 @@ LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = "home"
 LOGIN_REDIRECT_URL = "home"
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# Posts pagination
+TOPICS_PAGINATE_BY = 8
+POSTS_PAGINATE_BY = 3
+LAST_POSTS_NUM_IN_REPLY = 5

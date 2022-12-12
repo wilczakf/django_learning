@@ -7,6 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView, UpdateView
 from boards.forms import NewTopicForm, PostForm
 from boards.models import Board, Topic, Post
+from django_learning.settings import POSTS_PAGINATE_BY, TOPICS_PAGINATE_BY
 
 
 class BoardListView(ListView):
@@ -19,7 +20,7 @@ class TopicListView(ListView):
     model = Topic
     context_object_name = "topics"
     template_name = "topics.html"
-    paginate_by = 10
+    paginate_by = TOPICS_PAGINATE_BY
 
     def get_context_data(self, *, object_list=None, **kwargs):
         kwargs["board"] = self.board
@@ -37,11 +38,15 @@ class PostListView(ListView):
     model = Post
     context_object_name = "posts"
     template_name = "topic_posts.html"
-    paginate_by = 3
+    paginate_by = POSTS_PAGINATE_BY
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        self.topic.views += 1
-        self.topic.save()
+        session_key = f"viewed_topic_{self.topic.pk}"
+        if not self.request.session.get(session_key, False):
+            self.topic.views += 1
+            self.topic.save()
+            self.request.session[session_key] = True
+
         kwargs["topic"] = self.topic
         return super().get_context_data(**kwargs)
 
@@ -82,13 +87,17 @@ def new_topic(request, board_pk):
 @login_required
 def reply_topic(request, board_pk, topic_pk):
     topic = get_object_or_404(Topic, board__pk=board_pk, pk=topic_pk)
-    if request.method == "POST":  # todo why GET instead of POST is working ??
+    if request.method == "POST":
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
             post.topic = topic
             post.created_by = request.user
             post.save()
+
+            topic.last_updated = timezone.now()
+            topic.save()
+
             return redirect("topic_posts", board_pk=board_pk, topic_pk=topic_pk)
     else:
         form = PostForm()
